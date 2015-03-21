@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsMakeyPi", "src\LetsMakeyPi\LetsMakeyPi.csproj", "{E509477F-40BA-4720-BDD2-4F5B569AC798}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsMakeyPi", "src\LetsMakeyPi\LetsMakeyPi.csproj", "{D12392DE-0FBD-4E5D-813A-3A30720755A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E509477F-40BA-4720-BDD2-4F5B569AC798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E509477F-40BA-4720-BDD2-4F5B569AC798}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E509477F-40BA-4720-BDD2-4F5B569AC798}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E509477F-40BA-4720-BDD2-4F5B569AC798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12392DE-0FBD-4E5D-813A-3A30720755A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12392DE-0FBD-4E5D-813A-3A30720755A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12392DE-0FBD-4E5D-813A-3A30720755A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12392DE-0FBD-4E5D-813A-3A30720755A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
