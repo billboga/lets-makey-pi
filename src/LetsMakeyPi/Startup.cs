@@ -1,4 +1,6 @@
-﻿using Owin;
+﻿using Nancy;
+using Nancy.Owin;
+using Owin;
 
 namespace LetsMakeyPi
 {
@@ -6,8 +8,11 @@ namespace LetsMakeyPi
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseNancy();
-            app.MapSignalR();
+            app
+                .UseNancy(configuration => configuration.PassThroughWhenStatusCodesAre(
+                    HttpStatusCode.NotFound,
+                    HttpStatusCode.InternalServerError))
+                .MapSignalR();
         }
     }
 }
