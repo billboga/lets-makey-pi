@@ -7,6 +7,7 @@ namespace LetsMakeyPi
         public void Configuration(IAppBuilder app)
         {
             app.UseNancy();
+            app.MapSignalR();
         }
     }
 }
