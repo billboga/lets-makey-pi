@@ -80,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Hubs\WordSpellHub.cs" />
+    <Compile Include="Models\WordSpell\JoinGame.cs" />
+    <Compile Include="Models\WordSpell\SubmitLetter.cs" />
+    <Compile Include="Models\WordSpell\Team.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
