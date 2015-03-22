@@ -15,7 +15,12 @@
                 // Declare a proxy to reference the hub.
                 game = $.connection.wordSpellHub;
 
-                game.client.letterSubmitted = function(model) {
+                game.client.letterSubmitted = function(data) {
+                    console.log(data);
+                };
+
+                game.client.startGame = function(data) {
+                    console.log(data);
                 };
 
                 // Start the connection.

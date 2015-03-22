@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using LetsMakeyPi.Models.WordSpell;
 using Microsoft.AspNet.SignalR;
@@ -12,7 +10,7 @@ namespace LetsMakeyPi.Hubs
     {
         private static readonly GameContainer gameContainer = new GameContainer();
 
-        public void CreateGame(string gameName)
+        public static void CreateGame(string gameName)
         {
             gameContainer.CreateGame(gameName);
         }
@@ -37,15 +35,17 @@ namespace LetsMakeyPi.Hubs
             }
         }
 
-        public void StartGame(string gameName)
+        public static void StartGame(string gameName)
         {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<WordSpellHub>();
+
             if (gameContainer.GameExists(gameName))
             {
                 var teams = gameContainer.StartGame(gameName);
 
                 foreach (var team in teams)
                 {
-                    Clients.Client(team.ConnectionId).startGame(team.LetterQueue);
+                    hubContext.Clients.Client(team.ConnectionId).startGame(team.LetterQueue);
                 }
             }
             else
@@ -56,9 +56,12 @@ namespace LetsMakeyPi.Hubs
 
         public void SubmitLetter(SubmitLetter model)
         {
-            // get team based on submitted game and team name
-            // check if submitted player and letter match next pair in queue
-            // adjust queue if good
+            if (!gameContainer.IsLetterGood(model))
+            {
+                throw new HubException("Player/Letter combination does not match expected value");
+            }
+
+            // check if any winners
         }
     }
 
@@ -86,6 +89,19 @@ namespace LetsMakeyPi.Hubs
         public bool GameExists(string gameName)
         {
             return gameName != null && games.ContainsKey(gameName);
+        }
+
+        public bool IsLetterGood(SubmitLetter model)
+        {
+            var team = games
+                .First(x => x.Key == model.GameName)
+                .Value.First(x => x.TeamName == model.TeamName);
+
+            return team.IsNextInQueue(new Team.PlayerLetter()
+            {
+                Letter = model.Letter,
+                PlayerNumber = model.PlayerNumber
+            });
         }
 
         public IEnumerable<Team> StartGame(string gameName)

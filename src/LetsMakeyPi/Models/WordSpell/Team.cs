@@ -20,11 +20,27 @@ namespace LetsMakeyPi.Models.WordSpell
         public string TeamName { get; set; }
         private string word { get; set; }
 
-        public Queue<PlayerLetter> LetterQueue
+        public IEnumerable<PlayerLetter> LetterQueue
         {
             get
             {
-                return letterQueue;
+                return letterQueue.Select(x => x);
+            }
+        }
+
+        public bool IsNextInQueue(PlayerLetter playerLetter)
+        {
+            var head = letterQueue.Peek();
+
+            if (playerLetter.Equals(head))
+            {
+                letterQueue.Dequeue();
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -51,10 +67,32 @@ namespace LetsMakeyPi.Models.WordSpell
             }
         }
 
-        private class PlayerLetter
+        public class PlayerLetter
         {
             public char Letter { get; set; }
             public int PlayerNumber {  get; set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                if (obj as PlayerLetter == null)
+                {
+                    return false;
+                }
+
+                return
+                    this.Letter == ((PlayerLetter)obj).Letter
+                    && this.PlayerNumber == ((PlayerLetter)obj).PlayerNumber;
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
     }
 }
