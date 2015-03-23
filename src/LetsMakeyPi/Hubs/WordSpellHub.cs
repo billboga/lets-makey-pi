@@ -19,20 +19,29 @@ namespace LetsMakeyPi.Hubs
         {
             if (gameContainer.GameExists(model.GameName))
             {
-                gameContainer.AddTeam(new Team()
+                var team = new Team()
                 {
                     ConnectionId = Context.ConnectionId,
                     GameName = model.GameName,
                     NumberOfPlayers = model.NumberOfPlayers,
                     TeamName = model.TeamName
-                });
+                };
 
-                return Groups.Add(Context.ConnectionId, model.GameName);
+                gameContainer.AddTeam(team);
+
+                Clients.Group(model.GameName).teamJoined(team);
+
+                return Observe(model.GameName);
             }
             else
             {
                 throw new HubException("Game does not exist");
             }
+        }
+
+        public Task Observe(string gameName)
+        {
+            return Groups.Add(Context.ConnectionId, gameName);
         }
 
         public static void StartGame(string gameName)
@@ -45,8 +54,16 @@ namespace LetsMakeyPi.Hubs
 
                 foreach (var team in teams)
                 {
-                    hubContext.Clients.Client(team.ConnectionId).startGame(team.LetterQueue);
+                    var data = new
+                    {
+                        word = team.Word,
+                        letters = team.LetterQueue
+                    };
+
+                    hubContext.Clients.Client(team.ConnectionId).startGame(data);
                 }
+
+                hubContext.Clients.Group(gameName).letterSubmitted(teams);
             }
             else
             {
@@ -61,7 +78,9 @@ namespace LetsMakeyPi.Hubs
                 throw new HubException("Player/Letter combination does not match expected value");
             }
 
-            // check if any winners
+            var teams = gameContainer.GetTeams(model.GameName);
+
+            Clients.Group(model.GameName).letterSubmitted(teams);
         }
     }
 
@@ -89,6 +108,15 @@ namespace LetsMakeyPi.Hubs
         public bool GameExists(string gameName)
         {
             return gameName != null && games.ContainsKey(gameName);
+        }
+
+        public IEnumerable<Team> GetTeams(string gameName)
+        {
+            var teams = games
+                .First(x => x.Key == gameName)
+                .Value;
+
+            return teams;
         }
 
         public bool IsLetterGood(SubmitLetter model)
