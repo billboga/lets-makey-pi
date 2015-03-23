@@ -2,31 +2,13 @@
 <html>
     <head>
         <title>Let's Makey Pi</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         @RenderBody()
-        <script src="~/Scripts/jquery-1.6.4.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.2.js"></script>
         <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
         <script src="~/signalr/hubs"></script>
-        <script type="text/javascript">
-            var game = null;
-
-            $(function() {
-                // Declare a proxy to reference the hub.
-                game = $.connection.wordSpellHub;
-
-                game.client.letterSubmitted = function(data) {
-                    console.log(data);
-                };
-
-                game.client.startGame = function(data) {
-                    console.log(data);
-                };
-
-                // Start the connection.
-                $.connection.hub.start().done(function() {
-                });
-            });
-        </script>
+        @RenderSection("scripts", required: false)
     </body>
 </html>
