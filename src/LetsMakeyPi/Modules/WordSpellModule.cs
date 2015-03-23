@@ -14,6 +14,11 @@ namespace LetsMakeyPi.Modules
                 return View["Index"];
             };
 
+            Get["/{gameName}"] = parameters =>
+            {
+                return View["Show", parameters];
+            };
+
             Post["/"] = _ =>
             {
                 var gameName = Request.Form.gameName;
