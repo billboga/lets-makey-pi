@@ -18,7 +18,7 @@ namespace LetsMakeyPi.Models.WordSpell
         public int NumberOfPlayers { get; set; }
         private Queue<PlayerLetter> letterQueue { get; set; }
         public string TeamName { get; set; }
-        private string word { get; set; }
+        public string Word { get; set; }
 
         public IEnumerable<PlayerLetter> LetterQueue
         {
@@ -46,7 +46,9 @@ namespace LetsMakeyPi.Models.WordSpell
 
         public void SetWord(string word)
         {
-            var wordLetterIndex = 0;;
+            Word = word;
+
+            var wordLetterIndex = 0;
             var playerIndex = 1;
 
             while (wordLetterIndex < word.Count())
