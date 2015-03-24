@@ -1,0 +1,85 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+
+@section scripts {
+    <script type="text/javascript">
+        var game = null;
+        var $teamsContainer = $('#teams-container');
+
+        $(function() {
+            // Declare a proxy to reference the hub.
+            game = $.connection.wordSpellHub;
+
+            game.client.letterSubmitted = function(data) {
+                $teamsContainer.empty();
+
+                $(data).each(function() {
+                    var $teamContainer = $('<div>')
+                        .addClass('col-xs-12');
+
+                    var $teamHeader = $('<div>')
+                        .addClass('col-xs-2')
+                        .html(this.TeamName);
+
+                    var $teamBody = $('<div>')
+                        .addClass('col-xs-10');
+
+                    var wordLength = this.Word.length;
+                    var letterQueueLength = this.LetterQueue.length;
+
+                    for (var i = wordLength - 1; i >= 0; i--) {
+                        var letterStatus = i >= (wordLength - letterQueueLength) ? 'default' : 'success';
+
+                        var $letter = $('<div>')
+                            .addClass('col-xs-1 text-center btn btn-' + letterStatus)
+                            .html(this.Word[i]);
+
+                        $teamBody.prepend($letter);
+                    }
+
+                    $teamContainer.append($teamHeader);
+                    $teamContainer.append($teamBody);
+                    $teamsContainer.append($teamContainer);
+                });
+            };
+
+            game.client.teamJoined = function(data) {
+                var $teamContainer = $('<div>')
+                    .addClass('col-xs-12');
+
+                var $teamHeader = $('<div>')
+                    .addClass('col-xs-2')
+                    .html(data.TeamName);
+
+                $teamContainer.append($teamHeader);
+                $teamsContainer.append($teamContainer);
+            };
+
+            // Start the connection.
+            $.connection.hub.start().done(function() {
+            });
+
+            $('#observe-game').on('click', function(event) {
+                event.preventDefault();
+
+                game.server.observe("@Model.gameName");
+            });
+        });
+    </script>
+}
+
+<form method="post" id="join-game">
+    <input type="hidden" name="gameName" value="@Model.gameName" />
+
+    <label for="teamName">Team name:</label>
+    <input type="text" id="teamName" name="teamName" />
+
+    <label for="numberOfPlayers">Number of players:</label>
+    <input type="text" id="numberOfPlayers" name="numberOfPlayers" />
+
+    <button>Join</button>
+</form>
+<button id="observe-game" class="btn btn-default">Observe</button>
+
+<div id="teams-container" style="font-size:2em;">
+
+</div>

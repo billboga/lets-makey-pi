@@ -1,0 +1,110 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+
+@section scripts {
+    <script type="text/javascript">
+        var game = null;
+        var $wordContainer = $('#word-container');
+        var $playersContainer = $('#players-container');
+        var gameName = "@Model.gameName";
+        var teamName = "@Model.teamName";
+        var numberOfPlayers = @Model.numberOfPlayers;
+
+        $(function() {
+            // Declare a proxy to reference the hub.
+            game = $.connection.wordSpellHub;
+
+            var letterPlayerMapping = {
+                w: 1,
+                a: 2,
+                s: 3,
+                d: 4,
+                f: 5,
+                g: 6
+            };
+
+            $('body').on('keydown', function(event) {
+                var letter = String
+                    .fromCharCode(event.which)
+                    .toLowerCase();
+                var playerNumber = letterPlayerMapping[letter];
+
+                if (playerNumber !== undefined) {
+                    var $playerBody = $playersContainer
+                        .find('#player-' + playerNumber + ' .letter-queue');
+
+                    var $nextLetterInQueue = $playerBody.find(':visible').first();
+
+                    $nextLetterInQueue.addClass('btn-info');
+
+                    game.server.submitLetter({
+                        gameName: gameName,
+                        teamName: teamName,
+                        playerNumber: playerNumber,
+                        letter: $nextLetterInQueue.data('letter')
+                    }).then(function() {
+                        $nextLetterInQueue.css('display', 'none');
+
+                        var $nextWordLetter = $wordContainer
+                            .find('.word-letter')
+                            .not('.label-success')
+                            .first();
+
+                        $nextWordLetter.addClass('label-success');
+                    }).fail(function() {
+                        $nextLetterInQueue.addClass('btn-danger');
+                    });
+                }
+            });
+
+            game.client.startGame = function(data) {
+                var word = data.word;
+                var letters = data.letters;
+
+                for (var i = 0, length = word.length; i < length; i++) {
+                    var $letter = $('<span>')
+                        .addClass('label label-default word-letter')
+                        .html(word[i]);
+
+                    $wordContainer.append($letter);
+                }
+
+                $(letters).each(function() {
+                    var $letter = $('<div>')
+                        .addClass('col-xs-1 text-center btn btn-default')
+                        .data({
+                            letter: this.Letter,
+                            playerNumber: this.PlayerNumber
+                        })
+                        .html(this.Letter);
+
+                    var $playerBody = $playersContainer
+                        .find('#player-' + this.PlayerNumber + ' .letter-queue')
+
+                    $playerBody.append($letter);
+                });
+            };
+
+            // Start the connection.
+            $.connection.hub.start().done(function() {
+                game.server.joinGame({
+                    gameName: gameName,
+                    teamName: teamName,
+                    numberOfPlayers: numberOfPlayers
+                });
+            });
+        });
+    </script>
+}
+<div id="word-container" class="col-xs-12 text-center" style="font-size:4em;font-weight:bold;">
+</div>
+<div id="players-container" class="col-xs-12">
+    @for (var i = 1; i <= @Model.numberOfPlayers; i++)
+    {
+    <div id="player-@i" class="panel panel-primary player-container">
+        <div class="panel-heading">
+            <h3 class="panel-title">Player @i</h3>
+        </div>
+        <div class="panel-body letter-queue"></div>
+    </div>
+    }
+</div>
