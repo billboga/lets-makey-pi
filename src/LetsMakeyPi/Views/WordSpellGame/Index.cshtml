@@ -17,14 +17,14 @@
 
                 $(data).each(function() {
                     var $teamContainer = $('<div>')
-                        .addClass('col-xs-12');
+                        .addClass('panel panel-default');
 
                     var $teamHeader = $('<div>')
-                        .addClass('col-xs-2')
+                        .addClass('panel-heading')
                         .html(this.TeamName);
 
                     var $teamBody = $('<div>')
-                        .addClass('col-xs-10');
+                        .addClass('panel-body');
 
                     var wordLength = this.Word.length;
                     var letterQueueLength = this.LetterQueue.length;
@@ -32,8 +32,8 @@
                     for (var i = wordLength - 1; i >= 0; i--) {
                         var letterStatus = i >= (wordLength - letterQueueLength) ? 'default' : 'success';
 
-                        var $letter = $('<div>')
-                            .addClass('col-xs-1 text-center btn btn-' + letterStatus)
+                        var $letter = $('<span>')
+                            .addClass('label label-' + letterStatus)
                             .html(this.Word[i]);
 
                         $teamBody.prepend($letter);
