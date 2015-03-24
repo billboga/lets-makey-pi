@@ -10,8 +10,12 @@ namespace LetsMakeyPi.Modules
         {
             Get["/"] = _ =>
             {
-                // Show list of games
-                return View["Index"];
+                var model = new
+                {
+                    gameName = Request.Query.gameName ?? string.Empty
+                };
+
+                return View["Index",  model];
             };
 
             Post["/"] = _ =>
@@ -28,7 +32,9 @@ namespace LetsMakeyPi.Modules
                 {
                     WordSpellHub.CreateGame(gameName);
 
-                    return Response.AsRedirect("/word-spell");
+                    string uri = string.Format("/word-spell?gameName={0}", gameName);
+
+                    return Response.AsRedirect(uri);
                 }
             };
 
@@ -41,7 +47,9 @@ namespace LetsMakeyPi.Modules
                 {
                     WordSpellHub.StartGame(gameName);
 
-                    return Response.AsRedirect("/word-spell");
+                    string uri = string.Format("/word-spell/{0}", gameName);
+
+                    return Response.AsRedirect(uri);
                 }
 
                 return Negotiate

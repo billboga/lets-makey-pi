@@ -1,11 +1,68 @@
-﻿<form method="post">
-    <label for="gameName">Game name:</label>
-    <input type="text" id="gameName" name="gameName" />
-    <button>Create</button>
-</form>
-<form method="post">
-    <input type="hidden" name="_method" value="PUT" />
-    <label for="gameName">Game name:</label>
-    <input type="text" id="gameName" name="gameName" />
-    <button name="action" value="start">Start</button>
-</form>
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+
+@if (string.IsNullOrWhiteSpace(Model.gameName))
+{
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="panel-title">Create a game</span>
+            </div>
+            <div class="panel-body">
+                <form method="post">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="gameName">Game name</label>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input type="text" id="gameName" name="gameName" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <button class="btn btn-primary">Create</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
+else
+{
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="panel-title">Start a game</span>
+            </div>
+            <div class="panel-body">
+                <form method="post">
+                    <input type="hidden" name="_method" value="PUT" />
+                    <fieldset>
+                        <legend>
+                            Wait until all teams have joined before starting the game.
+                        </legend>
+                        <div class="form-group">
+                            <label for="gameName">Game name</label>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input type="text" id="gameName" name="gameName" class="form-control" value="@Model.gameName" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                <button class="btn btn-primary" name="action" value="start">Start</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
