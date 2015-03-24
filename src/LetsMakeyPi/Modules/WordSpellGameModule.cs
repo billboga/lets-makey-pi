@@ -15,6 +15,8 @@ namespace LetsMakeyPi.Modules
         {
             Get["/"] = parameters =>
             {
+                parameters.isObserver = Request.Query.observer ?? false;
+
                 return View["Index", parameters];
             };
 

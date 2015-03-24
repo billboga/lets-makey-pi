@@ -9,6 +9,9 @@
             // Declare a proxy to reference the hub.
             game = $.connection.wordSpellHub;
 
+            var gameName = "@Model.gameName";
+            var isObserver = @(Model.isObserver ? "true" : "false");
+
             game.client.letterSubmitted = function(data) {
                 $teamsContainer.empty();
 
@@ -44,42 +47,79 @@
 
             game.client.teamJoined = function(data) {
                 var $teamContainer = $('<div>')
-                    .addClass('col-xs-12');
+                    .addClass('alert alert-info')
+                    .html('<strong>' + data.TeamName + '</strong> has joined!');
 
-                var $teamHeader = $('<div>')
-                    .addClass('col-xs-2')
-                    .html(data.TeamName);
-
-                $teamContainer.append($teamHeader);
                 $teamsContainer.append($teamContainer);
             };
 
             // Start the connection.
             $.connection.hub.start().done(function() {
-            });
-
-            $('#observe-game').on('click', function(event) {
-                event.preventDefault();
-
-                game.server.observe("@Model.gameName");
+                if (isObserver) {
+                    game.server.observe(gameName);
+                }
             });
         });
     </script>
 }
 
-<form method="post" id="join-game">
-    <input type="hidden" name="gameName" value="@Model.gameName" />
-
-    <label for="teamName">Team name:</label>
-    <input type="text" id="teamName" name="teamName" />
-
-    <label for="numberOfPlayers">Number of players:</label>
-    <input type="text" id="numberOfPlayers" name="numberOfPlayers" />
-
-    <button>Join</button>
-</form>
-<button id="observe-game" class="btn btn-default">Observe</button>
-
-<div id="teams-container" style="font-size:2em;">
-
+@if (Model.isObserver)
+{
+<div class="row">
+    <div class="col-xs-12">
+        <div id="teams-container" style="font-size:2em;">
+            <div class="alert alert-info">
+                <i class="glyphicon glyphicon-hourglass"></i>&nbsp;Waiting for teams to join and game to start.
+            </div>
+        </div>
+    </div>
 </div>
+}
+else
+{
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="panel-title">Game options for <kbd>@Model.gameName</kbd></span>
+            </div>
+            <div class="panel-body">
+                <form method="post" id="join-game">
+                    <fieldset>
+                        <input type="hidden" name="gameName" value="@Model.gameName" />
+                        <legend>
+                            Choose a name for your team and the number of players.
+                        </legend>
+                        <div class="form-group">
+                            <label for="teamName">Team name</label>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <input type="text" id="teamName" name="teamName" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="numberOfPlayers">Number of players</label>
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <input type="text" id="numberOfPlayers" name="numberOfPlayers" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-right">
+                            <div class="col-xs-12">
+                                <button class="btn btn-primary">Create team</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="panel-footer text-right">
+                <a href="/word-spell/@(Model.gameName)?observer=true" id="observe-game" class="btn btn-default">
+                    Or choose to be an observer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+}
