@@ -21,7 +21,7 @@
 
                     var $teamHeader = $('<div>')
                         .addClass('panel-heading')
-                        .html(this.TeamName);
+                        .html('<i class="fa fa-users"></i>&nbsp;' + this.TeamName);
 
                     var $teamBody = $('<div>')
                         .addClass('panel-body');
@@ -69,7 +69,7 @@
     <div class="col-xs-12">
         <div id="teams-container" style="font-size:2em;">
             <div class="alert alert-info">
-                <i class="glyphicon glyphicon-hourglass"></i>&nbsp;Waiting for teams to join and game to start.
+                <i class="fa fa-cog fa-spin"></i>&nbsp;Waiting for teams to join and game to start.
             </div>
         </div>
     </div>
@@ -108,7 +108,9 @@ else
                         </div>
                         <div class="row text-right">
                             <div class="col-xs-12">
-                                <button class="btn btn-primary">Create team</button>
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-thumbs-o-up"></i>&nbsp;Create team
+                                </button>
                             </div>
                         </div>
                     </fieldset>
@@ -116,7 +118,7 @@ else
             </div>
             <div class="panel-footer text-right">
                 <a href="/word-spell/@(Model.gameName)?observer=true" id="observe-game" class="btn btn-default">
-                    Or choose to be an observer
+                    <i class="fa fa-binoculars"></i>&nbsp;Or choose to be an observer
                 </a>
             </div>
         </div>
