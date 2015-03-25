@@ -52,6 +52,10 @@
                         $nextWordLetter.addClass('label-success');
                     }).fail(function() {
                         $nextLetterInQueue.addClass('btn-danger');
+
+                        setTimeout(function() {
+                            $nextLetterInQueue.removeClass('btn-danger btn-info');
+                        }, 1000);
                     });
                 }
             });
@@ -59,6 +63,8 @@
             game.client.startGame = function(data) {
                 var word = data.word;
                 var letters = data.letters;
+
+                $wordContainer.empty();
 
                 for (var i = 0, length = word.length; i < length; i++) {
                     var $letter = $('<span>')
@@ -95,7 +101,7 @@
         });
     </script>
 }
-<div id="word-container" class="col-xs-12 text-center" style="font-size:4em;font-weight:bold;">
+<div id="word-container" class="col-xs-12 text-center" style="font-size:4em;font-weight:bold;margin-bottom:1em;">
 </div>
 <div id="players-container" class="col-xs-12">
     @for (var i = 1; i <= @Model.numberOfPlayers; i++)
