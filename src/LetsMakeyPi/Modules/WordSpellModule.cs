@@ -41,11 +41,12 @@ namespace LetsMakeyPi.Modules
             Put["/"] = _ =>
             {
                 var gameName = Request.Form.gameName;
+                var word = Request.Form.word;
                 var action = Request.Form.action;
 
                 if (action == "start")
                 {
-                    WordSpellHub.StartGame(gameName);
+                    WordSpellHub.StartGame(gameName, word);
 
                     string uri = string.Format("/word-spell/{0}", gameName);
 

@@ -44,13 +44,13 @@ namespace LetsMakeyPi.Hubs
             return Groups.Add(Context.ConnectionId, gameName);
         }
 
-        public static void StartGame(string gameName)
+        public static void StartGame(string gameName, string word)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<WordSpellHub>();
 
             if (gameContainer.GameExists(gameName))
             {
-                var teams = gameContainer.StartGame(gameName);
+                var teams = gameContainer.StartGame(gameName, word);
 
                 foreach (var team in teams)
                 {
@@ -132,10 +132,8 @@ namespace LetsMakeyPi.Hubs
             });
         }
 
-        public IEnumerable<Team> StartGame(string gameName)
+        public IEnumerable<Team> StartGame(string gameName, string word = "makeymakey")
         {
-            var word = "word"; // TODO generate word
-
             var teams = games
                 .Where(x => x.Key == gameName)
                 .First().Value;
